@@ -1,0 +1,37 @@
+# One command brings up the database and the API:
+#   docker compose up --build
+#
+# Host ports are 9193 for the API and 55433 for Postgres. 8080 and 5432 are the
+# two most likely to be taken already on a developer's machine.
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: showtime
+      POSTGRES_USER: showtime
+      POSTGRES_PASSWORD: showtime
+    ports:
+      - "55433:5432"
+    volumes:
+      - showtime-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U showtime -d showtime"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build: ./api
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/showtime
+      DB_USER: showtime
+      DB_PASSWORD: showtime
+    ports:
+      - "9193:9193"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  showtime-data:
