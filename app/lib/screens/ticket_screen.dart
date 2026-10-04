@@ -27,18 +27,30 @@ class TicketScreen extends StatelessWidget {
                   end: Alignment.bottomRight,
                 ),
               ),
-              child: Column(
+              child: DefaultTextStyle(
+                // The card is a light gradient, so it carries dark ink. The
+                // surrounding theme is dark and would otherwise hand this
+                // subtree near-white text on a near-white background.
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .copyWith(color: const Color(0xFF1A0B10)),
+                child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.confirmation_number_rounded, size: 36),
+                  const Icon(Icons.confirmation_number_rounded,
+                      size: 36, color: Color(0xFF1A0B10)),
                   const SizedBox(height: 16),
                   Text(booking.movieTitle,
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineSmall
-                          ?.copyWith(fontWeight: FontWeight.w700)),
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.w700,
+                            color: const Color(0xFF1A0B10),
+                          )),
                   const SizedBox(height: 4),
-                  Text(booking.screenName, style: Theme.of(context).textTheme.bodyMedium),
+                  Text(booking.screenName,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: const Color(0xFF4A2F38),
+                          )),
                   const SizedBox(height: 20),
                   Row(
                     children: [
@@ -49,16 +61,18 @@ class TicketScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
                   Text('REFERENCE',
-                      style: Theme.of(context)
-                          .textTheme
-                          .labelSmall
-                          ?.copyWith(letterSpacing: 2)),
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            letterSpacing: 2,
+                            color: const Color(0xFF4A2F38),
+                          )),
                   Text(booking.reference,
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleLarge
-                          ?.copyWith(fontFamily: 'monospace')),
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontFamily: 'monospace',
+                            color: const Color(0xFF1A0B10),
+                            fontWeight: FontWeight.w700,
+                          )),
                 ],
+                ),
               ),
             ),
             const Spacer(),
@@ -85,9 +99,16 @@ class _Block extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(label,
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(letterSpacing: 2)),
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    letterSpacing: 2,
+                    color: const Color(0xFF4A2F38),
+                  )),
           const SizedBox(height: 2),
-          Text(value, style: Theme.of(context).textTheme.titleMedium),
+          Text(value,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: const Color(0xFF1A0B10),
+                    fontWeight: FontWeight.w600,
+                  )),
         ],
       );
 }

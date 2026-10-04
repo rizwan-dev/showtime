@@ -3,10 +3,9 @@
 A cinema ticket-booking system: **Ktor** API in Kotlin, **Flutter** app for
 Android and iOS.
 
-> **Status: backend complete and verified; app written but not yet run on a
-> device.** 13 Kotlin tests pass against real PostgreSQL, 15 Dart tests pass,
-> `flutter analyze` is clean. What remains is building and running the app on an
-> emulator — see [Where this stopped](#where-this-stopped).
+> **Status: running.** 13 Kotlin tests against real PostgreSQL, 15 Dart tests,
+> `flutter analyze` clean, and the whole flow driven on an Android emulator
+> against the live API — browse, pick seats, hold, pay, ticket.
 
 ## The actual problem
 
@@ -109,18 +108,23 @@ guarantee here is a database guarantee — a unique index, an `ON CONFLICT`
 takeover, `now()` evaluated server-side — and a fake would only be testing the
 fake.
 
-## Where this stopped
+## Verified, not just asserted
 
-The API is verified end to end over HTTP: hold `201`, a second holder `409`,
-confirm `201`, re-confirming the same hold `410 Gone`, holding a booked seat
-`409`.
+Over HTTP: hold `201`, a second holder `409`, confirm `201`, re-confirming the
+same hold `410 Gone`, holding a booked seat `409`.
 
-The Flutter app analyses clean and its tests pass, but it has **not yet been run
-on a device**. Two toolchain problems, both on the machine rather than in the
-code:
+On an Android emulator against the live API: picked D5–D7, the hold appeared on
+screen as a countdown and the server independently reported those three seats
+`HELD`; paying returned reference `PC-1F0DCCE0`, and the server then reported
+them `BOOKED` with no holds left.
 
-- **iOS**: the installed simulator runtime is 26.1 while the SDK is 26.2, so
-  `xcodebuild` resolves zero destinations. Fixed by installing the matching
-  simulator runtime.
-- **Android**: `cmdline-tools` is missing from the SDK and the licences are
-  unaccepted, so Gradle cannot fetch what the Flutter build asks for.
+Holding seats from a *separate* client showed them on the phone in the "held by
+someone" colour while booked seats stayed grey — the four seat states reading
+correctly at the same time, from two different clients.
+
+### Known gap
+
+iOS has not been run. The machine's simulator runtime is 26.1 while its SDK is
+26.2, so `xcodebuild` resolves no destinations; the fix is installing the
+matching runtime, not a code change. Nothing in the app is Android-specific
+beyond the `10.0.2.2` host alias, which is already branched on `Platform`.
