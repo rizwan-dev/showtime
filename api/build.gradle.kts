@@ -41,3 +41,11 @@ tasks.test {
     useJUnitPlatform()
     testLogging { events("passed", "failed", "skipped") }
 }
+
+// Flyway 10+ finds its database support through META-INF/services files. The
+// fat jar must merge them rather than keep one copy, or Flyway skips every
+// migration as "not following the filename convention" and the API starts on
+// an empty schema.
+tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
+    mergeServiceFiles()
+}
